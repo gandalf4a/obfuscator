@@ -1,3 +1,10 @@
+针对Obfuscator对LLVM10.0的移植，详情参考：
+[LLVM（二）obfuscator混淆工具移植llvm-10.0](http://www.gandalf.site/2020/08/llvmobfuscator-llvmllvm-100.html)
+
+
+
+other:
+
 Please have a look at the [wiki](https://github.com/obfuscator-llvm/obfuscator/wiki)!
 
 Current version: [LLVM-4.0](https://github.com/obfuscator-llvm/obfuscator/tree/llvm-4.0)
