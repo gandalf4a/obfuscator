@@ -157,7 +157,6 @@ static cl::opt<bool>
     EnableMatrix("enable-matrix", cl::init(false), cl::Hidden,
                  cl::desc("Enable lowering of the matrix intrinsics"));
 
-
 // Flags for obfuscation
 static cl::opt<bool> Flattening("fla", cl::init(false),
                                 cl::desc("Enable the flattening pass"));
@@ -173,6 +172,7 @@ static cl::opt<std::string> AesSeed("aesSeed", cl::init(""),
 
 static cl::opt<bool> Split("spli", cl::init(false),
                            cl::desc("Enable basic block splitting"));
+
 
 
 PassManagerBuilder::PassManagerBuilder() {
@@ -542,6 +542,7 @@ void PassManagerBuilder::populateModulePassManager(
       MPM.add(createGlobalDCEPass());
     }
 
+    MPM.add(createSubstitution(Substitution));
     addExtensionsToPM(EP_EnabledOnOptLevel0, MPM);
 
     if (PrepareForLTO || PrepareForThinLTO) {
@@ -692,7 +693,6 @@ void PassManagerBuilder::populateModulePassManager(
     MPM.add(createCanonicalizeAliasesPass());
     // Rename anon globals to be able to export them in the summary.
     MPM.add(createNameAnonGlobalPass());
-    MPM.add(createSubstitution(Substitution));
     return;
   }
 
@@ -850,7 +850,6 @@ void PassManagerBuilder::populateModulePassManager(
   MPM.add(createLoopSinkPass());
   // Get rid of LCSSA nodes.
   MPM.add(createInstSimplifyLegacyPass());
-  MPM.add(createSubstitution(Substitution));
 
   // This hoists/decomposes div/rem ops. It should run after other sink/hoist
   // passes to avoid re-sinking, but before SimplifyCFG because it can allow
@@ -860,6 +859,8 @@ void PassManagerBuilder::populateModulePassManager(
   // LoopSink (and other loop passes since the last simplifyCFG) might have
   // resulted in single-entry-single-exit or empty blocks. Clean up the CFG.
   MPM.add(createCFGSimplificationPass());
+
+  MPM.add(createSubstitution(Substitution));
 
   addExtensionsToPM(EP_OptimizerLast, MPM);
 
